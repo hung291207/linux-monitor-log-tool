@@ -140,7 +140,7 @@ def _extract_ssh_event(parsed_line: dict[str, str]) -> dict[str, str | None] | N
     return event
 
 
-def parse_auth_log(log_path: Path = AUTH_LOG_PATH, max_events_per_type: int = 3,) -> dict[str, object]:
+def parse_auth_log(log_path: Path = AUTH_LOG_PATH) -> dict[str, object]:
     if not log_path.exists():
         return {
             "source": str(log_path),
@@ -189,7 +189,7 @@ def parse_auth_log(log_path: Path = AUTH_LOG_PATH, max_events_per_type: int = 3,
         "failed_login_count": len(failed_logins),
         "sudo_event_count": len(sudo_events),
         "ssh_event_count": len(ssh_events),
-        "failed_logins": failed_logins[-max_events_per_type:],
-        "sudo_events": sudo_events[-max_events_per_type:],
-        "ssh_events": ssh_events[-max_events_per_type:],
+        "failed_logins": failed_logins,
+        "sudo_events": sudo_events,
+        "ssh_events": ssh_events,
     }

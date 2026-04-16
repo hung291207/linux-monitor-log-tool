@@ -7,6 +7,7 @@ from src.network_monitor import get_listening_ports
 from src.user_sessions import get_user_sessions
 from src.cron_review import get_scheduled_jobs
 from src.log_parser import parse_auth_log
+from src.indicators import get_indicators
 
 def main() -> None:
     report = {
@@ -21,6 +22,15 @@ def main() -> None:
         "log_events": parse_auth_log(),
     }
     
+    indicators = get_indicators(report)
+    report["indicators"] = indicators
+
+    max_display = 3
+    log_events = report.get("log_events", {})
+    for key in ("failed_logins", "sudo_events", "ssh_events"):
+        if key in log_events:
+            log_events[key] = log_events[key][-max_display:]
+
     report_json = json.dumps(report, indent=2)
     print(report_json)
     
