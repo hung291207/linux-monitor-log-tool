@@ -8,6 +8,7 @@ from src.user_sessions import get_user_sessions
 from src.cron_review import get_scheduled_jobs
 from src.log_parser import parse_auth_log
 from src.indicators import get_indicators
+from src.report_writer import save_json_report
 
 def main() -> None:
     report = {
@@ -24,6 +25,7 @@ def main() -> None:
     
     indicators = get_indicators(report)
     report["indicators"] = indicators
+    report_path = save_json_report(report)
 
     max_display = 3
     log_events = report.get("log_events", {})
@@ -33,6 +35,7 @@ def main() -> None:
 
     report_json = json.dumps(report, indent=2)
     print(report_json)
+    print(f"Report saved to {report_path}")
     
 if __name__ == "__main__":
     main()
