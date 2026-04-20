@@ -84,8 +84,15 @@ def _check_failed_logins(report: dict[str, object]) -> list[dict[str, object]]:
     if len(recent_failed) < FAILED_LOGIN_THRESHOLD:
         return []
 
-    usernames = _unique_non_empty([event.get("username") for event in recent_failed])
-    source_ips = _unique_non_empty([event.get("source_ip") for event in recent_failed])
+    usernames_raw = []
+    for event in recent_failed:
+        usernames_raw.append(event.get("username"))
+    usernames = _unique_non_empty(usernames_raw)
+
+    source_ips_raw = []
+    for event in recent_failed:
+        source_ips_raw.append(event.get("source_ip"))
+    source_ips = _unique_non_empty(source_ips_raw)
 
     return [
         {
@@ -115,7 +122,10 @@ def _check_recent_sudo(report: dict[str, object]) -> list[dict[str, object]]:
     if not recent_sudo:
         return []
 
-    commands = _unique_non_empty([event.get("command") for event in recent_sudo], limit=3)
+    commands_raw = []
+    for event in recent_sudo:
+        commands_raw.append(event.get("command"))
+    commands = _unique_non_empty(commands_raw, limit=3)
 
     return [
         {
@@ -184,8 +194,14 @@ def _is_external_bind(address: str | None) -> bool:
     if not address:
         return False
 
-    local_only_addresses = {"127.0.0.1", "::1", "localhost"}
-    return address not in local_only_addresses
+    if address.startswith("127."):
+        return False
+
+    if address in {"::1", "localhost"}:
+        return False
+
+    return True
+
 
 
 def _check_unusual_ports(report: dict[str, object]) -> list[dict[str, object]]:
@@ -258,7 +274,10 @@ def _check_suspicious_cron_entries(report: dict[str, object]) -> list[dict[str, 
         if raw_entry.startswith("["):
             continue
 
-        matched_patterns = [pattern for pattern in SUSPICIOUS_CRON_PATTERNS if pattern in lowered]
+        matched_patterns = []
+        for pattern in SUSPICIOUS_CRON_PATTERNS:
+            if pattern in lowered:
+                matched_patterns.append(pattern)
         if not matched_patterns:
             continue
 
@@ -279,7 +298,7 @@ def _check_suspicious_cron_entries(report: dict[str, object]) -> list[dict[str, 
             "severity": "low",
             "title": "Cron entry flagged for review",
             "summary": (
-                f"{len(suspicious_entries)} cron entrie(s) matched review patterns "
+                f"{len(suspicious_entries)} cron entry(ies) matched review patterns "
                 "such as script execution from /tmp or command-download behavior."
             ),
             "details": {
