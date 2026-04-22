@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import psutil
 
+
 def _bytes_to_gb(num_bytes: int) -> float:
     return round(num_bytes / (1024 ** 3), 2)
+
 
 def get_resource_usage() -> dict[str, dict[str, float | int]]:
     cpu_percent = psutil.cpu_percent(interval=1)

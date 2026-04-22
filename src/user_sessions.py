@@ -4,12 +4,14 @@ from datetime import datetime, timezone
 
 import psutil
 
+
 def _format_login_time(timestamp: float) -> str:
     return datetime.fromtimestamp(timestamp, tz=timezone.utc).astimezone().isoformat(timespec="seconds")
 
+
 def get_user_sessions() -> dict[str, object]:
     sessions = []
-    
+
     for user in psutil.users():
         sessions.append(
             {

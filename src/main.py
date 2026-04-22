@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 
 from src.system_info import get_system_info
@@ -9,6 +11,7 @@ from src.cron_review import get_scheduled_jobs
 from src.log_parser import parse_auth_log
 from src.indicators import get_indicators
 from src.report_writer import save_json_report
+
 
 def main() -> None:
     report = {
@@ -36,6 +39,6 @@ def main() -> None:
     report_json = json.dumps(report, indent=2)
     print(report_json)
     print(f"Report saved to {report_path}")
-    
+
 if __name__ == "__main__":
     main()

@@ -19,7 +19,7 @@ FAILED_PASSWORD_PATTERN = re.compile(
 )
 
 AUTH_FAILURE_PATTERN = re.compile(
-    r"authentication failure;.*?(?:rhost=(?P<source_ip>\S*))?.*?user=(?P<username>\S*)"
+    r"authentication failure;.*?(?:\brhost=(?P<source_ip>\S*))?.*?\buser=(?P<username>\S*)"
 )
 
 SUDO_PATTERN = re.compile(
