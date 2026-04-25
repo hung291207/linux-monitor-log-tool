@@ -196,7 +196,7 @@ linux-monitor-log-tool/
 ├── reports/                   # saved JSON reports (gitignored)
 ├── tests/
 │   ├── test_log_parser.py     # 6 tests — line parsing, event extraction, integration
-│   └── test_indicators.py     # 5 tests — one per indicator type
+│   └── test_indicators.py     # 13 tests — positive and negative cases
 └── docs/
 ```
 
